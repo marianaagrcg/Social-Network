@@ -26,4 +26,7 @@ Asegúrate de tener instaladas las siguientes herramientas en tu máquina:
 ```bash
 npm install
 
+npm install -g expo-cli
+
+
 expo start
