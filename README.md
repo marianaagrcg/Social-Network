@@ -1,11 +1,28 @@
-# Sample Snack app
+# Social Network App
 
-Open the `App.js` file to start writing some code. You can preview the changes directly on your phone or tablet by scanning the **QR code** or use the iOS or Android emulators. When you're done, click **Save** and share the link!
+## Descripción
 
-When you're ready to see everything that Expo provides (or if you want to use your own editor) you can **Download** your project and use it with [expo cli](https://docs.expo.dev/get-started/installation/#expo-cli)).
+Esta es una aplicación de red social construida con React Native. Permite a los usuarios registrarse, iniciar sesión y publicar contenido.
 
-All projects created in Snack are publicly available, so you can easily share the link to this project via link, or embed it on a web page with the `<>` button.
+## Requisitos Previos
 
-If you're having problems, you can tweet to us [@expo](https://twitter.com/expo) or ask in our [forums](https://forums.expo.dev/c/expo-dev-tools/61) or [Discord](https://chat.expo.dev/).
+Asegúrate de tener instaladas las siguientes herramientas en tu máquina:
 
-Snack is Open Source. You can find the code on the [GitHub repo](https://github.com/expo/snack).
+- [Node.js](https://nodejs.org/) (versión 14 o superior)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/) (instalado globalmente)
+- Un emulador de Android/iOS o un dispositivo físico para ejecutar la aplicación.
+
+## Clonación del Repositorio
+
+1. Abre una terminal.
+2. Navega a la carpeta donde deseas clonar el repositorio.
+3. Ejecuta el siguiente comando para clonar el repositorio:
+
+   ```bash
+   git clone https://github.com/marianaagrcg/Social-Network.git
+4.  Accede a la carpeta del proyecto
+
+## Instalacion de Dependencias 
+npm install
+
+expo start
