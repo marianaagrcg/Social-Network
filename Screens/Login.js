@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff', // Color del texto del botón
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   link: {
