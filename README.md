@@ -23,6 +23,7 @@ Asegúrate de tener instaladas las siguientes herramientas en tu máquina:
 4.  Accede a la carpeta del proyecto
 
 ## Instalacion de Dependencias 
+```bash
 npm install
 
 expo start
