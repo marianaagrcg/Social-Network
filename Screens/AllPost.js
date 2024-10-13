@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
 
-export default Posts = ({ navigation }) => {
+export default AllPosts = ({ navigation }) => {
   const [posts, setPosts] = useState([]);  
   const [error, setError] = useState(null); 
 
-  const handlePosts = async () => {
+  const handleAllPosts = async () => {
     try {
       const response = await fetch(
         'https://social-network-v7j7.onrender.com/api/posts?page=1&limit=10',
@@ -41,11 +41,11 @@ export default Posts = ({ navigation }) => {
 
   // Llamar a handlePosts cuando el componente se monta
   useEffect(() => {
-    handlePosts();
+    handleAllPosts();
   }, []);
 
   // Renderizar cada post individualmente
-  const renderPost = ({ item }) => (
+  const renderAllPost = ({ item }) => (
     <View style={styles.postContainer}>
       <Text style={styles.username}>{item.username}</Text>
       <Text style={styles.content}>{item.content}</Text>
@@ -63,7 +63,7 @@ export default Posts = ({ navigation }) => {
         <FlatList
           data={posts}
           keyExtractor={(item) => item.id.toString()} // Usar el ID del post como key
-          renderItem={renderPost}
+          renderItem={renderAllPost}
         />
       )}
     </View>

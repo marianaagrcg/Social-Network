@@ -26,10 +26,10 @@ export default Login = ({ navigation }) => {
       if (response.ok) {
         Alert.alert('Login Success', `Welcome ${data.username}`);
         console.log('Token:', data.token);
-        navigation.navigate('Posts');
+        navigation.navigate('Home'); // Navegar al TabNavigator después del login
       } else {
         Alert.alert('Login Failed', data.message || 'Something went wrong');
-      }
+      }      
     } catch (error) {
       Alert.alert('Error', 'An error occurred while trying to log in.');
       console.log(error);

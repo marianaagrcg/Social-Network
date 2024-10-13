@@ -1,46 +1,41 @@
-import { Text, View, StyleSheet } from 'react-native';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Login from './Screens/Login';
 import SignUp from './Screens/SignUp';
-import Posts from './Screens/Posts';
+import AllPost from './Screens/AllPost';
+import Following from './Screens/Following';
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+// Función para el Tab Navigator
+function HomeTabs() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="All Post" component={AllPost} />
+      <Tab.Screen name="Following" component={Following} />
+    </Tab.Navigator>
+  );
+}
 
 export default function App() {
   return (
     <NavigationContainer>
+      {/* Stack Navigator */}
       <Stack.Navigator>
+        {/* Pantallas de autenticación */}
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+
+        {/* Anidando el Tab Navigator dentro del Stack Navigator */}
         <Stack.Screen 
-          name="Login" 
-          component={Login} 
-          options={{ 
-            headerTitleAlign: 'center',
-            title: 'Login', 
-          }} 
-        />
-        <Stack.Screen 
-          name="SignUp" 
-          component={SignUp} 
-          options={{ 
-            headerTitleAlign: 'center', 
-            title: 'Sign Up',
-          }} 
-        />
-        <Stack.Screen 
-          name="Posts" 
-          component={Posts} 
-          options={{ 
-            headerTitleAlign: 'center', 
-            title: 'Posts',
-          }} 
+          name="Home" 
+          component={HomeTabs} 
+          options={{ headerShown: false }} 
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-
-
-});
