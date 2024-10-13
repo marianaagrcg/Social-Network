@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   button: {
-    backgroundColor: '#1E90FF', // Fondo azul del botón
+    backgroundColor: '#1E90FF', 
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     margin: 12,
   },
   buttonText: {
-    color: '#fff', // Color del texto del botón
+    color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
   },
