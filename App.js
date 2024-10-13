@@ -6,6 +6,7 @@ import Login from './Screens/Login';
 import SignUp from './Screens/SignUp';
 import AllPost from './Screens/AllPost';
 import Following from './Screens/Following';
+import Profiel from './Screens/Profiel';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -16,6 +17,7 @@ function HomeTabs() {
     <Tab.Navigator>
       <Tab.Screen name="All Post" component={AllPost} />
       <Tab.Screen name="Following" component={Following} />
+      <Tab.Screen name="Profiel" component={Profiel}/>
     </Tab.Navigator>
   );
 }

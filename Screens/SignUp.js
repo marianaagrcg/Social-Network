@@ -31,15 +31,12 @@ export default SignUp = ({ navigation }) => {
       const data = await response.json();
 
       if (response.ok) {
-        // Mostrar mensaje de éxito
         setSuccessMessage('Signup successful! Please login');
         console.log('Token:', data.token);
-        // Después de mostrar el mensaje, podrías navegar al login
         navigation.navigate('Login');
       } else {
-        // Mostrar el mensaje de error recibido desde el servidor
         if (data.errors && data.errors.length > 0) {
-          setErrorMessage(data.errors[0].msg); // Muestra el primer error de validación
+          setErrorMessage(data.errors[0].msg); 
         } else {
           setErrorMessage(data.message || 'Something went wrong');
         }
@@ -72,13 +69,11 @@ export default SignUp = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
       />
-      
-      {/* Mostrar mensaje de error en rojo si existe */}
+
       {errorMessage ? (
         <Text style={styles.errorText}>{errorMessage}</Text>
       ) : null}
 
-      {/* Mostrar mensaje de éxito en verde si existe */}
       {successMessage ? (
         <Text style={styles.successText}>{successMessage}</Text>
       ) : null}
@@ -120,7 +115,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   button: {
-    backgroundColor: '#46a65e', // Color de fondo del botón
+    backgroundColor: '#46a65e', 
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
@@ -128,7 +123,7 @@ const styles = StyleSheet.create({
     margin: 12,
   },
   buttonText: {
-    color: '#fff', // Color del texto del botón
+    color: '#fff', 
     fontSize: 16,
     fontWeight: 'bold',
   },

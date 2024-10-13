@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
 
-export default Users = () =>{
+export default Profiel = () => {
     return(
         <View>
             <Text>
-                Users
+                Profiel
             </Text>
         </View>
-    );
+    )
 }
-
-// Uma´s implementation

@@ -26,7 +26,7 @@ export default Login = ({ navigation }) => {
       if (response.ok) {
         Alert.alert('Login Success', `Welcome ${data.username}`);
         console.log('Token:', data.token);
-        navigation.navigate('Home'); // Navegar al TabNavigator después del login
+        navigation.navigate('Home'); 
       } else {
         Alert.alert('Login Failed', data.message || 'Something went wrong');
       }      

@@ -39,7 +39,6 @@ export default AllPosts = ({ navigation }) => {
     }
   };
 
-  // Llamar a handlePosts cuando el componente se monta
   useEffect(() => {
     handleAllPosts();
   }, []);
@@ -62,7 +61,7 @@ export default AllPosts = ({ navigation }) => {
       ) : (
         <FlatList
           data={posts}
-          keyExtractor={(item) => item.id.toString()} // Usar el ID del post como key
+          keyExtractor={(item) => item.id.toString()} 
           renderItem={renderAllPost}
         />
       )}
