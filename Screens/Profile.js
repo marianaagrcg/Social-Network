@@ -5,7 +5,7 @@ export default Profiel = () => {
     return(
         <View>
             <Text>
-                Profiel
+                Profile
             </Text>
         </View>
     )

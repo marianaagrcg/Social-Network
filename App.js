@@ -6,7 +6,7 @@ import Login from './Screens/Login';
 import SignUp from './Screens/SignUp';
 import AllPost from './Screens/AllPost';
 import Following from './Screens/Following';
-import Profiel from './Screens/Profiel';
+import Profiel from './Screens/Profile';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
