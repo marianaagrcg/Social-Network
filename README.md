@@ -28,4 +28,4 @@ npm install
 
 npm install -g expo-cli
 
-expo start
+npx expo start

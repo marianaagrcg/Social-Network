@@ -5,8 +5,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Login from './Screens/Login';
 import SignUp from './Screens/SignUp';
 import AllPost from './Screens/AllPost';
-import Following from './Screens/Following';
-import Profiel from './Screens/Profiel';
+import Feed from './Screens/Following';
+import Profile from './Screens/Profile';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -16,8 +16,8 @@ function HomeTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="All Post" component={AllPost} />
-      <Tab.Screen name="Following" component={Following} />
-      <Tab.Screen name="Profiel" component={Profiel}/>
+      <Tab.Screen name="Following" component={Feed} />
+      <Tab.Screen name="Profile" component={Profile}/>
     </Tab.Navigator>
   );
 }
