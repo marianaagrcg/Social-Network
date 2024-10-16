@@ -16,8 +16,8 @@ function HomeTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="All Post" component={AllPost} />
-      <Tab.Screen name="Following" component={Feed} />
-      <Tab.Screen name="Profile" component={Profile}/>
+      <Tab.Screen name="Following" component={Following} />
+      <Tab.Screen name="Profiel" component={Profile}/>
     </Tab.Navigator>
   );
 }
