@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default AllPosts = ({ navigation }) => {
-  const [posts, setPosts] = useState([]);  
+export default AllPost = ({ navigation }) => {
+  const [post, setPost] = useState([]);  
   const [error, setError] = useState(null); 
 
-  const handleAllPosts = async () => {
+  const handleAllPost = async () => {
     try {
+      const token = await AsyncStorage.getItem('token');  // Recuperar el token de AsyncStorage
+      if (!token) {
+        Alert.alert('Error', 'No token found');
+        return;
+      }
       const response = await fetch(
         'https://social-network-v7j7.onrender.com/api/posts?page=1&limit=10',
         {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjg4LCJpYXQiOjE3MjkwMzI4NzYsImV4cCI6MTcyOTA0MDA3Nn0.a8pIbA2bSuSLQv_RW6wV1bVzsv5N-MvHyHbyzUKZgk4',
+            'Authorization': `Bearer ${token}`,
           },
         }
       );
@@ -26,7 +32,7 @@ export default AllPosts = ({ navigation }) => {
       if (response.ok) {
         if (contentType && contentType.includes('application/json')) {
           const data = JSON.parse(responseBody);  
-          setPosts(data); 
+          setPost(data); 
         } else {
           setError('Unexpected response format');
         }
@@ -40,7 +46,7 @@ export default AllPosts = ({ navigation }) => {
   };
 
   useEffect(() => {
-    handleAllPosts();
+    handleAllPost();
   }, []);
 
   // Renderizar cada post individualmente
@@ -60,7 +66,7 @@ export default AllPosts = ({ navigation }) => {
         <Text style={styles.errorText}>{error}</Text>
       ) : (
         <FlatList
-          data={posts}
+          data={post}
           keyExtractor={(item) => item.id.toString()} 
           renderItem={renderAllPost}
         />

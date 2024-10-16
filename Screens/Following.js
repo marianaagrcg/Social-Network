@@ -13,7 +13,7 @@ export default Feed = () => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjg4LCJpYXQiOjE3MjkwMzI4NzYsImV4cCI6MTcyOTA0MDA3Nn0.a8pIbA2bSuSLQv_RW6wV1bVzsv5N-MvHyHbyzUKZgk4',
+                        'Authorization': `Bearer ${token}`,
                     },
                 }
             );
