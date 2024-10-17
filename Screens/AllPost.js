@@ -1,56 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { getAllPosts } from '../api/allPostsAPI'; 
 
-export default AllPost = ({ navigation }) => {
-  const [post, setPost] = useState([]);  
-  const [error, setError] = useState(null); 
-
-  const handleAllPost = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');  // Recuperar el token de AsyncStorage
-      console.log('Token:', token);
-      if (!token) {
-        Alert.alert('Error', 'No token found');
-        return;
-      }
-      const response = await fetch(
-        'https://social-network-v7j7.onrender.com/api/posts?page=1&limit=10',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        }
-      );
-
-      const contentType = response.headers.get('Content-Type');
-      const responseBody = await response.text();  
-
-      console.log('Response Body:', responseBody);
-
-      if (response.ok) {
-        if (contentType && contentType.includes('application/json')) {
-          const data = JSON.parse(responseBody);  
-          setPost(data); 
-        } else {
-          setError('Unexpected response format');
-        }
-      } else {
-        Alert.alert('Failed to fetch posts', responseBody || 'Something went wrong');
-      }
-    } catch (error) {
-      setError('An error occurred while fetching posts.');
-      console.log(error);
-    }
-  };
+export default AllPost = ({ navigation }) => {  
+  const [posts, setPosts] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    handleAllPost();
+    const fetchPosts = async () => {
+      try {
+        const data = await getAllPosts();
+        setPosts(data);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    fetchPosts();
   }, []);
 
-  // Renderizar cada post individualmente
   const renderAllPost = ({ item }) => (
     <View style={styles.postContainer}>
       <Text style={styles.username}>{item.username}</Text>
@@ -67,11 +35,19 @@ export default AllPost = ({ navigation }) => {
         <Text style={styles.errorText}>{error}</Text>
       ) : (
         <FlatList
-          data={post}
+          data={posts}
           keyExtractor={(item) => item.id.toString()} 
           renderItem={renderAllPost}
         />
       )}
+
+      {/* Botón para crear un nuevo post */}
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => navigation.navigate('CreatePost')}  // Usa navigation prop
+      >
+        <Text style={styles.addButtonText}>+</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -117,5 +93,25 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginVertical: 10,
+  }, addButton: {
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    backgroundColor: '#007AFF',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: 'bold',
   },
 });

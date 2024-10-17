@@ -1,49 +1,24 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { signUp } from '../api/signUpAPI'; 
 
 export default SignUp = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); 
-  const [successMessage, setSuccessMessage] = useState(''); 
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleSignUp = async () => {
     setErrorMessage('');
     setSuccessMessage('');
 
     try {
-      const response = await fetch(
-        'https://social-network-v7j7.onrender.com/api/auth/signup',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: username,
-            email: email,
-            password: password,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccessMessage('Signup successful! Please login');
-        console.log('Token:', data.token);
-        navigation.navigate('Login');
-      } else {
-        if (data.errors && data.errors.length > 0) {
-          setErrorMessage(data.errors[0].msg); 
-        } else {
-          setErrorMessage(data.message || 'Something went wrong');
-        }
-      }
+      const data = await signUp(username, email, password);
+      setSuccessMessage('Signup successful! Please login');
+      navigation.navigate('Login');
     } catch (error) {
-      setErrorMessage('An error occurred while creating the account.');
-      console.log(error);
+      setErrorMessage(error.message);
     }
   };
 
