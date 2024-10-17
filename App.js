@@ -9,6 +9,7 @@ import AllPost from './Screens/AllPost';
 import Following from './Screens/Following';
 import Profile from './Screens/Profile';
 import CreatePost from './Screens/CreatePost';
+import UserDetail from './Screens/UserDetail';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
