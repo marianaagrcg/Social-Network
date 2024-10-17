@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';  // Importar SecureStore
 
 export default AllPost = ({ navigation }) => {
   const [post, setPost] = useState([]);  
@@ -8,7 +8,7 @@ export default AllPost = ({ navigation }) => {
 
   const handleAllPost = async () => {
     try {
-      const token = await AsyncStorage.getItem('token');  // Recuperar el token de AsyncStorage
+      const token = await SecureStore.getItemAsync('token');  // Recuperar el token de SecureStore
       if (!token) {
         Alert.alert('Error', 'No token found');
         return;

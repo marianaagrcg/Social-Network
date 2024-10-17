@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';  // Importar SecureStore
 
 export default Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -26,8 +26,11 @@ export default Login = ({ navigation }) => {
 
       if (response.ok) {
         Alert.alert('Login Success', `Welcome ${data.username}`);
-        await AsyncStorage.setItem('token', data.token);
-        console.log('Token guardado:', data.token);
+        
+        // Guardar el token de forma segura utilizando SecureStore
+        await SecureStore.setItemAsync('token', data.token);
+        console.log('Token guardado de manera segura:', data.token);
+
         navigation.navigate('Home'); 
       } else {
         Alert.alert('Login Failed', data.message || 'Something went wrong');

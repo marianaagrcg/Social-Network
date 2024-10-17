@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
 
-export default Profiel = () => {
+export default Profile = () => {
     return(
         <View>
             <Text>
