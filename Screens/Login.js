@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import * as SecureStore from 'expo-secure-store';  // Importar SecureStore
+import { login } from '../api/loginAPI'; 
+import * as SecureStore from 'expo-secure-store';
 
 export default Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -8,36 +9,14 @@ export default Login = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(
-        'https://social-network-v7j7.onrender.com/api/auth/login',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
-        }
-      );
+      const data = await login(email, password);
+      Alert.alert('Login Success', `Welcome ${data.username}`);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        Alert.alert('Login Success', `Welcome ${data.username}`);
-        
-        // Guardar el token de forma segura utilizando SecureStore
-        await SecureStore.setItemAsync('token', data.token);
-        console.log('Token guardado de manera segura:', data.token);
-
-        navigation.navigate('Home'); 
-      } else {
-        Alert.alert('Login Failed', data.message || 'Something went wrong');
-      }      
+      // Guardar el token de manera segura
+      await SecureStore.setItemAsync('token', data.token);
+      navigation.navigate('Home');
     } catch (error) {
-      Alert.alert('Error', 'An error occurred while trying to log in.');
-      console.log(error);
+      Alert.alert('Login Failed', error.message);
     }
   };
 
