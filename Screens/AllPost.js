@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { getAllPosts } from '../api/allPostsAPI'; 
 
-export default AllPost = () => {
+export default AllPost = ({ navigation }) => {  // Recibe navigation como prop
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
 
@@ -19,8 +19,6 @@ export default AllPost = () => {
     fetchPosts();
   }, []);
 
-
-  // Renderizar cada post individualmente
   const renderAllPost = ({ item }) => (
     <View style={styles.postContainer}>
       <Text style={styles.username}>{item.username}</Text>
@@ -42,6 +40,14 @@ export default AllPost = () => {
           renderItem={renderAllPost}
         />
       )}
+
+      {/* Botón para crear un nuevo post */}
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => navigation.navigate('CreatePost')}  // Usa navigation prop
+      >
+        <Text style={styles.addButtonText}>+</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -87,5 +93,25 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginVertical: 10,
+  }, addButton: {
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    backgroundColor: '#007AFF',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: 'bold',
   },
 });
