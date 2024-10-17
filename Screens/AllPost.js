@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { getAllPosts } from '../api/allPostsAPI'; 
 
-export default AllPost = ({ navigation }) => {  // Recibe navigation como prop
+export default AllPost = ({ navigation }) => {  
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
 

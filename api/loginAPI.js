@@ -12,7 +12,7 @@ export const login = async (email, password) => {
       if (!response.ok) {
         throw new Error(data.message || 'Login failed');
       }
-      return data;  // El token y los datos de usuario
+      return data;
     } catch (error) {
       throw error;
     }
