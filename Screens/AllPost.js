@@ -21,7 +21,9 @@ export default AllPost = ({ navigation }) => {
 
   const renderAllPost = ({ item }) => (
     <View style={styles.postContainer}>
-      <Text style={styles.username}>{item.username}</Text>
+      <TouchableOpacity  onPress={() => navigation.navigate('UserDetail', { userId: item.user_id })}>
+        <Text style={styles.username}>{item.username}</Text>
+      </TouchableOpacity>
       <Text style={styles.content}>{item.content}</Text>
       <Text style={styles.timestamp}>{new Date(item.created_at).toLocaleString()}</Text>
     </View>
