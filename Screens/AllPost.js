@@ -9,6 +9,7 @@ export default AllPost = ({ navigation }) => {
   const handleAllPost = async () => {
     try {
       const token = await AsyncStorage.getItem('token');  // Recuperar el token de AsyncStorage
+      console.log('Token:', token);
       if (!token) {
         Alert.alert('Error', 'No token found');
         return;

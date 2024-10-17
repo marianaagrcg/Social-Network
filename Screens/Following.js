@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default Feed = () => {
+export default Following = ({ navigation }) => {
     const [followingPosts, setFollowingPosts] = useState([]);
     const [error, setError] = useState(null);
 
     const handleAllFollowingPosts = async () => {
         try {
+            const token = await AsyncStorage.getItem('token');
+            console.log('Token:', token);
+            if (!token) {
+                Alert.alert('Error', 'No token found');
+                return;
+            }
             const response = await fetch (
                 'https://social-network-v7j7.onrender.com/api/feed?page=1&limit=10',
                 {
@@ -26,7 +34,8 @@ export default Feed = () => {
             if (response.ok) {
                 if (contentType && contentType.includes('application/json')) {
                     const data = JSON.parse(responseBody);  
-                    setFollowingPosts(data);   
+                    setFollowingPosts(data); 
+                    console.log('Following posts:', data);
                 } else {
                     setError('Unexpected response format');
                 }
@@ -43,15 +52,17 @@ export default Feed = () => {
         handleAllFollowingPosts();
     }, []);
 
-    const renderAllFollowingPost = ({item}) => (
+    const renderAllFollowingPost = ({ item }) => (
         <View style={styles.postContainer}>
-            <Text style={styles.username}>{item.username}</Text>
+            <TouchableOpacity  onPress={() => navigation.navigate('UserDetail', { userId: item.user_id })}>
+                <Text style={styles.username}>{item.username}</Text>
+            </TouchableOpacity>
             <Text style={styles.content}>{item.content}</Text>
             <Text style={styles.timestamp}>{new Date(item.created_at).toLocaleString()}</Text>
         </View>
     );
 
-    return(
+    return (
     <View style={styles.container}>
       <Text style={styles.title}>Recent Posts</Text>
 
