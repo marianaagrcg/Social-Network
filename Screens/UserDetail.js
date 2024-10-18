@@ -85,7 +85,7 @@ export default function UserDetail({ route }) {
             ListEmptyComponent={() => (
                 <Text style={styles.noPostsText}>No more posts</Text>
             )}
-            contentContainerStyle={styles.flatListContent} // Asegura el margen entre los bordes del celular
+            contentContainerStyle={styles.flatListContent}
         />
     );
 }
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 30,
+        marginTop: 30,
     },
     avatarLarge: {
         width: 70,
@@ -135,12 +136,13 @@ const styles = StyleSheet.create({
     postsTitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginLeft: 5,
         alignSelf: 'flex-start',
+        marginBottom: -10,
     },
     postContainer: {
-        marginBottom: 20,
-        padding: 15,
+        marginBottom: 10,
+        padding: 12,
         backgroundColor: '#fff',
         borderRadius: 10,
         borderColor: '#ddd',
@@ -149,7 +151,6 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 2,
     },
     header: {
         flexDirection: 'row',
