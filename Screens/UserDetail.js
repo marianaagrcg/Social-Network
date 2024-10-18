@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         alignSelf: 'flex-start',
         marginBottom: -10,
+        marginTop: 30,
     },
     postContainer: {
         marginBottom: 10,

@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 export const getAllFollowingPosts = async (page = 1, limit = 15) => {
     try {
       const token = await SecureStore.getItemAsync('token');
+      console.log(token);
       if (!token) {
         throw new Error('No token found');
       }
