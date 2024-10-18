@@ -4,27 +4,33 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { userProfile } from '../api/userProfileAPI';
 import { getUserPosts } from '../api/userPostsAPI';
 
-const getRandomColor = (username) => {
+const getRandomColor = (username) =>
+{
     const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#8e44ad', '#e67e22'];
     const charCodeSum = username.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
     return colors[charCodeSum % colors.length];
 };
 
-export default function Profile() {
+export default function Profile()
+{
     const [userData, setUserData] = useState(null);
     const [userPosts, setUserPosts] = useState([]);  // Posts del usuario
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchUserProfile = async () => {
-            try {
+    useEffect(() =>
+    {
+        const fetchUserProfile = async () =>
+        {
+            try
+            {
                 const data = await userProfile(); // Obtener el perfil del usuario autenticado
                 const posts = await getUserPosts(data.id);  // Obtener posts del usuario logueado
                 setUserData(data);
                 setUserPosts(posts);  // Guardar posts
                 setLoading(false);
-            } catch (error) {
+            } catch (error)
+            {
                 setError(error.message);
                 setLoading(false);
             }
@@ -45,19 +51,33 @@ export default function Profile() {
             <Text style={styles.content}>{item.content}</Text>
 
             <View style={styles.footer}>
-                <Icon name="heart-o" size={20} color="#555" />
-                <Text style={styles.likeText}>
-                    {Array.isArray(item.likes) ? item.likes.length : 0} {item.likes?.length === 1 ? 'like' : 'likes'}
+                <View style={styles.likesContainer}>
+                    <Icon name="heart-o" size={20} color="#555" />
+                    <Text style={styles.likeText}>
+                        {Array.isArray(item.likes) ? item.likes.length : 0} {item.likes?.length === 1 ? 'like' : 'likes'}
+                    </Text>
+                </View>
+                <Text style={styles.timestamp}>
+                    {new Date(item.created_at).toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true,
+                    })}
                 </Text>
             </View>
         </View>
     );
 
-    if (loading) {
+    if (loading)
+    {
         return <ActivityIndicator size="large" color="#0000ff" />;
     }
 
-    if (error) {
+    if (error)
+    {
         return <Text style={styles.errorText}>{error}</Text>;
     }
 
@@ -177,12 +197,21 @@ const styles = StyleSheet.create({
     footer: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
         marginTop: 10,
     },
     likeText: {
         fontSize: 14,
         color: '#555',
-        marginLeft: 5,
+        marginLeft: 10,
+    },
+    likesContainer: {
+        flexDirection: 'row',
+    },
+    timestamp: {
+        fontSize: 12,
+        color: '#888',
+        marginLeft: 10,
     },
     noPostsText: {
         fontSize: 16,
