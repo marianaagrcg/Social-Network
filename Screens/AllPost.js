@@ -95,7 +95,8 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginVertical: 10,
-  }, addButton: {
+  }, 
+  addButton: {
     position: 'absolute',
     bottom: 30,
     right: 30,
