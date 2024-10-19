@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, FlatList, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUser } from '../api/userAPI';
 import { getUserPosts } from '../api/userPostsAPI';
+import { follow } from '../api/followAPI';
+import { unfollow } from '../api/unfollowAPI';
+import { userProfile } from '../api/userProfileAPI';
 
 const getRandomColor = (username) =>
 {
@@ -15,9 +18,11 @@ export default function UserDetail({ route })
 {
     const { userId } = route.params;
     const [userData, setUserData] = useState(null);
-    const [userPosts, setUserPosts] = useState([]);  // Posts del usuario
+    const [userPosts, setUserPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [currentUserId, setCurrentUserId] = useState(null);
 
     useEffect(() =>
     {
@@ -25,10 +30,14 @@ export default function UserDetail({ route })
         {
             try
             {
+                const currentUser = await userProfile();
+                setCurrentUserId(currentUser.id);
+
                 const data = await getUser(userId);
-                const posts = await getUserPosts(userId);  // Obtener posts
+                const posts = await getUserPosts(userId);
                 setUserData(data);
-                setUserPosts(posts);  // Guardar posts
+                setUserPosts(posts);
+                setIsFollowing(data.is_following);
                 setLoading(false);
             } catch (error)
             {
@@ -39,6 +48,19 @@ export default function UserDetail({ route })
 
         fetchUserDetails();
     }, [userId]);
+
+    const handleFollowToggle = async () => {
+        try {
+            if (isFollowing) {
+                await unfollow(userId);
+            } else {
+                await follow(userId);
+            }
+            setIsFollowing(!isFollowing);
+        } catch (error) {
+            console.error('Error al dar follow/unfollow', error);
+        }
+    };
 
     const renderPost = ({ item }) => (
         <View style={styles.postContainer}>
@@ -99,6 +121,13 @@ export default function UserDetail({ route })
                         <Text style={styles.followText}>Followers: {userData.follower_count}</Text>
                         <Text style={styles.followText}>Following: {userData.following_count}</Text>
                     </View>
+                    {currentUserId !== userId && (
+                        <Button
+                            title={isFollowing ? "Following" : "Follow"}
+                            onPress={handleFollowToggle}
+                            color={isFollowing ? "#808080" : "#0000ff"} // Gris si sigue, azul si no
+                        />
+                    )}
                     <Text style={styles.postsTitle}>Posts</Text>
                 </View>
             )}
