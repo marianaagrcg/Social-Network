@@ -17,7 +17,8 @@ export default CreatePost = ({ navigation }) => {
       const newPost = await createPost(content); 
       Alert.alert('Éxito', 'El post ha sido creado con éxito.');
       setContent(''); 
-      navigation.goBack(); 
+      // 
+      navigation.navigate('Home', { refresh: true });
     } catch (error) {
       Alert.alert('Error', 'Hubo un problema al crear el post.');
     } finally {

@@ -1,36 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getAllPosts } from '../api/allPostsAPI';
+import { useFocusEffect } from '@react-navigation/native';
 
-const getRandomColor = (username) =>
-{
+const getRandomColor = (username) => {
   const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#8e44ad', '#e67e22'];
   const charCodeSum = username.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
   return colors[charCodeSum % colors.length];
 };
 
-export default AllPost = ({ navigation }) =>
-{
+export default AllPost = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
 
-  useEffect(() =>
-  {
-    const fetchPosts = async () =>
-    {
-      try
-      {
-        const data = await getAllPosts();
-        setPosts(data);
-      } catch (error)
-      {
-        setError(error.message);
-      }
-    };
+  // Función para obtener los posts
+  const fetchPosts = async () => {
+    try {
+      const data = await getAllPosts();
+      setPosts(data);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
-    fetchPosts();
-  }, []);
+  // Ejecuta fetchPosts cada vez que se vuelve a enfocar la pantalla
+  useFocusEffect(
+    useCallback(() => {
+      fetchPosts();  // Actualiza los posts cuando la pantalla está activa
+    }, [])
+  );
 
   const renderAllPost = ({ item }) => (
     <View style={styles.postContainer}>
@@ -59,7 +58,7 @@ export default AllPost = ({ navigation }) =>
             day: 'numeric',
             hour: 'numeric',
             minute: 'numeric',
-            hour12: true, // Para formato de 12 horas (AM/PM)
+            hour12: true,
           })}
         </Text>
       </View>
@@ -82,7 +81,7 @@ export default AllPost = ({ navigation }) =>
 
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => navigation.navigate('CreatePost')}  // Usa navigation prop
+        onPress={() => navigation.navigate('CreatePost')}
       >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
