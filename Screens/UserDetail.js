@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, FlatList, Button } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUser } from '../api/userAPI';
 import { getUserPosts } from '../api/userPostsAPI';
-import { follow } from '../api/followAPI';
-import { unfollow } from '../api/unfollowAPI';
+import { follow, unfollow } from '../api/followAPI';
 import { userProfile } from '../api/userProfileAPI';
 
 const getRandomColor = (username) =>
@@ -49,15 +48,20 @@ export default function UserDetail({ route })
         fetchUserDetails();
     }, [userId]);
 
-    const handleFollowToggle = async () => {
-        try {
-            if (isFollowing) {
+    const handleFollowToggle = async () =>
+    {
+        try
+        {
+            if (isFollowing)
+            {
                 await unfollow(userId);
-            } else {
+            } else
+            {
                 await follow(userId);
             }
             setIsFollowing(!isFollowing);
-        } catch (error) {
+        } catch (error)
+        {
             console.error('Error al dar follow/unfollow', error);
         }
     };
@@ -122,11 +126,17 @@ export default function UserDetail({ route })
                         <Text style={styles.followText}>Following: {userData.following_count}</Text>
                     </View>
                     {currentUserId !== userId && (
-                        <Button
-                            title={isFollowing ? "Following" : "Follow"}
+                        <TouchableOpacity
+                            style={[
+                                styles.followButton,
+                                { backgroundColor: isFollowing ? "#808080" : "#1DA1F2" }
+                            ]}
                             onPress={handleFollowToggle}
-                            color={isFollowing ? "#808080" : "#0000ff"} // Gris si sigue, azul si no
-                        />
+                        >
+                            <Text style={styles.followButtonText}>
+                                {isFollowing ? "Following" : "Follow"}
+                            </Text>
+                        </TouchableOpacity>
                     )}
                     <Text style={styles.postsTitle}>Posts</Text>
                 </View>
@@ -247,6 +257,17 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#888',
         marginLeft: 10,
+    },
+    followButton: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        marginTop: 10,
+    },
+    followButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     noPostsText: {
         fontSize: 16,
