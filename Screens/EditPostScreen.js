@@ -51,13 +51,15 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   textInput: {
-    flex: 1,
-    textAlignVertical: 'top',
-    fontSize: 16,
-    padding: 8,
+    height: '40%',
+    width: '100%',
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 16,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    marginBottom: 20,
+    textAlignVertical: 'top',  
+    alignContent: 'center'
   },
 });
