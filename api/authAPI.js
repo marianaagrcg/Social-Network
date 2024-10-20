@@ -1,7 +1,7 @@
-// src/api/authAPI.js
 import { API_URL } from './config';
 import * as SecureStore from 'expo-secure-store';
 
+// Función para registrar un nuevo usuario
 export const signUp = async (username, email, password) => {
   try {
     const response = await fetch(`${API_URL}/auth/signup`, {
@@ -12,18 +12,19 @@ export const signUp = async (username, email, password) => {
       body: JSON.stringify({ username, email, password }),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Error al registrarse.');
+      throw new Error(data.errors?.[0]?.msg || data.message || 'Signup failed');
     }
 
-    const data = await response.json();
     return data;
   } catch (error) {
     throw error;
   }
 };
 
+// Función para iniciar sesión
 export const login = async (email, password) => {
   try {
     const response = await fetch(`${API_URL}/auth/login`, {
@@ -34,12 +35,11 @@ export const login = async (email, password) => {
       body: JSON.stringify({ email, password }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Error al iniciar sesión.');
-    }
-
     const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Login failed');
+    }
 
     // Guardar el token de manera segura
     await SecureStore.setItemAsync('token', data.token);
@@ -50,22 +50,28 @@ export const login = async (email, password) => {
   }
 };
 
+// Función para obtener el perfil del usuario autenticado
 export const getUserProfile = async () => {
   try {
-    const token = await SecureStore.getItemAsync('token');
+    const token = await getToken();
+    if (!token) {
+      throw new Error('No token found');
+    }
 
-    const response = await fetch(`${API_URL}/auth/profile`, {
+    const response = await fetch(`${API_URL}/users/me`, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
       },
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error('No se pudo obtener el perfil del usuario.');
+      throw new Error(data.message || 'Failed to fetch user profile');
     }
 
-    const data = await response.json();
     return data;
   } catch (error) {
     throw error;
@@ -78,7 +84,7 @@ export const getToken = async () => {
   return token;
 };
 
-// Función para cerrar sesión
+// Función para cerrar sesión 
 export const logout = async () => {
   await SecureStore.deleteItemAsync('token');
 };

@@ -1,8 +1,8 @@
-// src/screens/UserDetailScreen.js
-import React, { useState, useEffect } from 'react';
-import { Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { getUser, followUser, unfollowUser } from '../api/userAPI';
-import { getUserPosts } from '../api/postAPI';
+import { getUserPosts, likePost, unlikePost } from '../api/postAPI';
 import { getUserProfile } from '../api/authAPI';
 import UserAvatar from '../components/UserAvatar';
 import PostItem from '../components/PostItem';
@@ -15,26 +15,41 @@ export default function UserDetailScreen({ route, navigation }) {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        const currentUser = await getUserProfile();
-        setCurrentUserId(currentUser.id);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      setLoading(true);
 
-        const data = await getUser(userId);
-        const posts = await getUserPosts(userId);
-        setUserData(data);
-        setUserPosts(posts);
-        setIsFollowing(data.is_following);
-      } catch (error) {
-        console.error(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+      const fetchUserDetails = async () => {
+        try {
+          const currentUser = await getUserProfile();
+          if (isActive) {
+            setCurrentUserId(currentUser.id);
+          }
 
-    fetchUserDetails();
-  }, [userId]);
+          const data = await getUser(userId);
+          const posts = await getUserPosts(userId);
+          if (isActive) {
+            setUserData(data);
+            setUserPosts(posts);
+            setIsFollowing(data.is_following);
+          }
+        } catch (error) {
+          console.error(error.message);
+        } finally {
+          if (isActive) {
+            setLoading(false);
+          }
+        }
+      };
+
+      fetchUserDetails();
+
+      return () => {
+        isActive = false;
+      };
+    }, [userId])
+  );
 
   const handleFollowToggle = async () => {
     try {
@@ -50,11 +65,39 @@ export default function UserDetailScreen({ route, navigation }) {
   };
 
   const handleLike = async (postId, likes) => {
-    // Opcional: Implementar función de like/unlike si se desea
+    if (!currentUserId) return;
+  
+    try {
+      if (likes.includes(currentUserId)) {
+        await unlikePost(postId);
+        setUserPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === postId
+              ? { ...post, likes: post.likes.filter((id) => id !== currentUserId) }
+              : post
+          )
+        );
+      } else {
+        await likePost(postId);
+        setUserPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === postId ? { ...post, likes: [...post.likes, currentUserId] } : post
+          )
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
+  
 
   const handleUsernamePress = (userId) => {
-    // Opcional: Navegar a otro perfil si se desea
+    // Navegar a otro perfil si se desea
+    if (userId !== currentUserId) {
+      navigation.push('UserDetail', { userId });
+    } else {
+      navigation.navigate('Profile');
+    }
   };
 
   if (loading) {

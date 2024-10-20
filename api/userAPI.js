@@ -1,8 +1,7 @@
-// src/api/userAPI.js
 import { API_URL } from './config';
 import { getToken } from './authAPI';
 
-// Función para obtener la información de un usuario (de userAPI.js)
+// Función para obtener la información de un usuario 
 export const getUser = async (userId) => {
   try {
     const token = await getToken();
@@ -28,7 +27,7 @@ export const getUser = async (userId) => {
   }
 };
 
-// Funciones para seguir y dejar de seguir a un usuario (de followAPI.js)
+// Funciones para seguir y dejar de seguir a un usuario 
 export const followUser = async (userId) => {
   try {
     const token = await getToken();

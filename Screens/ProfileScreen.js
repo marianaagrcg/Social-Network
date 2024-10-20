@@ -1,33 +1,87 @@
-// src/screens/ProfileScreen.js
-import React, { useState, useEffect } from 'react';
-import { Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-import { getUserProfile } from '../api/authAPI';
-import { getUserPosts } from '../api/postAPI';
+import React, { useState, useCallback } from 'react';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { getUser } from '../api/userAPI';
+import { getUserPosts, likePost, unlikePost } from '../api/postAPI';
 import UserAvatar from '../components/UserAvatar';
 import PostItem from '../components/PostItem';
+import { getUserProfile } from '../api/authAPI';
 
 export default function ProfileScreen() {
   const [userData, setUserData] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const data = await getUserProfile();
-        const posts = await getUserPosts(data.id);
-        setUserData(data);
-        setUserPosts(posts);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      setLoading(true);
 
-    fetchUserProfile();
-  }, []);
+      const fetchUserProfile = async () => {
+        try {
+          // Obtener el ID del usuario actual
+          const currentUser = await getUserProfile();
+          if (isActive) {
+            setCurrentUserId(currentUser.id);
+          }
+
+          // Obtener datos completos del usuario
+          const data = await getUser(currentUser.id);
+          const posts = await getUserPosts(currentUser.id);
+          if (isActive) {
+            setUserData(data);
+            setUserPosts(posts);
+          }
+        } catch (error) {
+          if (isActive) {
+            setError(error.message);
+          }
+        } finally {
+          if (isActive) {
+            setLoading(false);
+          }
+        }
+      };
+
+      fetchUserProfile();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  const handleLike = async (postId, likes) => {
+    if (!currentUserId) return;
+
+    try {
+      if (likes.includes(currentUserId)) {
+        await unlikePost(postId);
+        setUserPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === postId
+              ? { ...post, likes: post.likes.filter((id) => id !== currentUserId) }
+              : post
+          )
+        );
+      } else {
+        await likePost(postId);
+        setUserPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === postId ? { ...post, likes: [...post.likes, currentUserId] } : post
+          )
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleUsernamePress = (userId) => {
+    // Estamos en el perfil del usuario actual, no es necesario navegar
+  };
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -44,9 +98,9 @@ export default function ProfileScreen() {
       renderItem={({ item }) => (
         <PostItem
           item={item}
-          onLikePress={() => {}}
-          onUsernamePress={() => {}}
-          currentUser={userData}
+          onLikePress={handleLike}
+          onUsernamePress={handleUsernamePress}
+          currentUser={{ id: currentUserId }}
         />
       )}
       ListHeaderComponent={
@@ -67,117 +121,104 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-    flatListContent: {
-        paddingHorizontal: 20,
-        paddingTop: 20,
-    },
-    profileSection: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 30,
-        marginTop: 30,
-    },
-    avatarLarge: {
-        width: 70,
-        height: 70,
-        borderRadius: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    avatarTextLarge: {
-        color: '#fff',
-        fontSize: 36,
-        fontWeight: 'bold',
-    },
-    usernameLarge: {
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    followInfo: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '50%',
-        marginVertical: 10,
-    },
-    followText: {
-        fontSize: 16,
-        color: '#555',
-    },
-    postsTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginLeft: 5,
-        alignSelf: 'flex-start',
-        marginBottom: -10,
-        marginTop: 30,
-    },
-    postContainer: {
-        marginBottom: 10,
-        padding: 10,
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        borderColor: '#ddd',
-        borderWidth: 1,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    avatar: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 10,
-    },
-    avatarText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    username: {
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    content: {
-        fontSize: 14,
-        marginBottom: 10,
-        color: '#333',
-    },
-    footer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    likeText: {
-        fontSize: 14,
-        color: '#555',
-        marginLeft: 10,
-    },
-    likesContainer: {
-        flexDirection: 'row',
-    },
-    timestamp: {
-        fontSize: 12,
-        color: '#888',
-        marginLeft: 10,
-    },
-    noPostsText: {
-        fontSize: 16,
-        color: '#888',
-        textAlign: 'center',
-        marginTop: 20,
-    },
-    errorText: {
-        color: 'red',
-        textAlign: 'center',
-    },
+  flatListContent: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  profileSection: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 30,
+    marginTop: 30,
+  },
+  usernameLarge: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  followInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '50%',
+    marginVertical: 10,
+  },
+  followText: {
+    fontSize: 16,
+    color: '#555',
+  },
+  postsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 5,
+    alignSelf: 'flex-start',
+    marginBottom: -10,
+    marginTop: 30,
+  },
+  postContainer: {
+    marginBottom: 10,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  avatarText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  username: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  content: {
+    fontSize: 14,
+    marginBottom: 10,
+    color: '#333',
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  likeText: {
+    fontSize: 14,
+    color: '#555',
+    marginLeft: 10,
+  },
+  likesContainer: {
+    flexDirection: 'row',
+  },
+  timestamp: {
+    fontSize: 12,
+    color: '#888',
+    marginLeft: 10,
+  },
+  noPostsText: {
+    fontSize: 16,
+    color: '#888',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+  },
 });

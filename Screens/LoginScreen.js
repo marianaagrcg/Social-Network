@@ -1,7 +1,6 @@
-// src/screens/LoginScreen.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { login } from '../api/authAPI'; // Importación actualizada
+import { login } from '../api/authAPI'; 
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -20,21 +19,22 @@ export default function LoginScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Welcome Back!</Text>
-      <TextInput
-        style={styles.input}
+      <TextInput 
+        style={styles.input} 
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
       />
-      <TextInput
-        style={styles.input}
+      <TextInput 
+        style={styles.input} 
         placeholder="Password"
-        secureTextEntry
+        secureTextEntry 
         value={password}
         onChangeText={setPassword}
       />
-
+      
+      {/* Botón de login personalizado en azul */}
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
@@ -42,7 +42,9 @@ export default function LoginScreen({ navigation }) {
       <View>
         <Text>
           Don't have an account?{' '}
-          <Text style={styles.link} onPress={() => navigation.navigate('SignUp')}>
+          <Text
+            style={styles.link}
+            onPress={() => navigation.navigate('SignUp')}>
             Sign Up
           </Text>
         </Text>
@@ -51,46 +53,50 @@ export default function LoginScreen({ navigation }) {
   );
 }
 
-// Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  text: {
     textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
     marginBottom: 20,
   },
-  postContainer: {
-    marginBottom: 20,
-    padding: 15,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 10,
+  input: {
+    height: 40,
+    width: '100%',
+    margin: 12,
+    borderWidth: 1,
+    borderColor: '#aaa',
+    borderRadius: 5,
+    paddingHorizontal: 20,
+    backgroundColor: '#f5f5f5',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    color: '#333',
   },
-  username: {
+  button: {
+    backgroundColor: '#1E90FF', 
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    width: '100%',
+    margin: 12,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 20,
     fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 5,
   },
-  content: {
-    fontSize: 14,
-    marginBottom: 5,
-  },
-  timestamp: {
-    fontSize: 12,
-    color: '#888',
-  },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    marginVertical: 10,
+  link: {
+    marginTop: 20,
+    color: 'blue',
   },
 });

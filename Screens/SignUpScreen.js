@@ -1,7 +1,6 @@
-// src/screens/SignUpScreen.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { signUp } from '../api/authAPI'; // Importación actualizada
+import { signUp } from '../api/authAPI'; 
 
 export default function SignUpScreen({ navigation }) {
   const [username, setUsername] = useState('');

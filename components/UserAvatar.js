@@ -1,4 +1,3 @@
-// src/components/UserAvatar.js
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { getRandomColor } from '../utils/colors';

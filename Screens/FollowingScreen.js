@@ -1,6 +1,6 @@
-// src/screens/FollowingScreen.js
-import React, { useState, useEffect } from 'react';
-import { Text, FlatList, StyleSheet } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { getFollowingPosts, likePost, unlikePost } from '../api/postAPI';
 import { getUserProfile } from '../api/authAPI';
 import PostItem from '../components/PostItem';
@@ -10,21 +10,35 @@ export default function FollowingScreen({ navigation }) {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userProfile = await getUserProfile();
-        setUser(userProfile);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
 
-        const data = await getFollowingPosts();
-        setFollowingPosts(data);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
+      const fetchData = async () => {
+        try {
+          const userProfile = await getUserProfile();
+          if (isActive) {
+            setUser(userProfile);
+          }
 
-    fetchData();
-  }, []);
+          const data = await getFollowingPosts();
+          if (isActive) {
+            setFollowingPosts(data);
+          }
+        } catch (error) {
+          if (isActive) {
+            setError(error.message);
+          }
+        }
+      };
+
+      fetchData();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
 
   const handleLike = async (postId, likes) => {
     if (!user) return;

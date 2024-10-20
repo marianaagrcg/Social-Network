@@ -1,6 +1,6 @@
-// src/screens/AllPostsScreen.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { getAllPosts, likePost, unlikePost } from '../api/postAPI';
 import { getUserProfile } from '../api/authAPI';
 import PostItem from '../components/PostItem';
@@ -10,21 +10,34 @@ export default function AllPostsScreen({ navigation }) {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userProfile = await getUserProfile();
-        setUser(userProfile);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      const fetchData = async () => {
+        try {
+          const userProfile = await getUserProfile();
+          if (isActive) {
+            setUser(userProfile);
+          }
 
-        const data = await getAllPosts();
-        setPosts(data);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
+          const data = await getAllPosts();
+          if (isActive) {
+            setPosts(data);
+          }
+        } catch (error) {
+          if (isActive) {
+            setError(error.message);
+          }
+        }
+      };
 
-    fetchData();
-  }, []);
+      fetchData();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
 
   const handleLike = async (postId, likes) => {
     if (!user) return;

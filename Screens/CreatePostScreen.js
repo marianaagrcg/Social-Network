@@ -1,6 +1,5 @@
-// src/screens/CreatePostScreen.js
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { createPost } from '../api/postAPI';
 
 export default function CreatePostScreen({ navigation }) {
