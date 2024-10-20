@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { getAllPosts, likePost, unlikePost } from '../api/postAPI';
+import { getAllPosts, likePost, unlikePost, deletePost } from '../api/postAPI';
 import { getUserProfile } from '../api/authAPI';
 import PostItem from '../components/PostItem';
 
@@ -69,6 +69,33 @@ export default function AllPostsScreen({ navigation }) {
     navigation.navigate('UserDetail', { userId });
   };
 
+  const handleEdit = (post) => {
+    navigation.navigate('EditPost', { post });
+  };
+
+  const handleDelete = (postId) => {
+    Alert.alert(
+      'Delete Post',
+      'Are you sure you want to delete this post?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deletePost(postId);
+              setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+            } catch (error) {
+              Alert.alert('Error', error.message);
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Recent Posts</Text>
@@ -85,6 +112,8 @@ export default function AllPostsScreen({ navigation }) {
               onLikePress={handleLike}
               onUsernamePress={handleUsernamePress}
               currentUser={user}
+              onEditPress={handleEdit}
+              onDeletePress={handleDelete}
             />
           )}
         />

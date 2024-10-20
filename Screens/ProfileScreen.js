@@ -1,13 +1,13 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { getUser } from '../api/userAPI';
-import { getUserPosts, likePost, unlikePost } from '../api/postAPI';
+import { getUserPosts, likePost, unlikePost, deletePost } from '../api/postAPI';
 import UserAvatar from '../components/UserAvatar';
 import PostItem from '../components/PostItem';
 import { getUserProfile } from '../api/authAPI';
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation }) {
   const [userData, setUserData] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -83,6 +83,33 @@ export default function ProfileScreen() {
     // Estamos en el perfil del usuario actual, no es necesario navegar
   };
 
+  const handleEdit = (post) => {
+    navigation.navigate('EditPost', { post });
+  };
+
+  const handleDelete = (postId) => {
+    Alert.alert(
+      'Delete Post',
+      'Are you sure you want to delete this post?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deletePost(postId);
+              setUserPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+            } catch (error) {
+              Alert.alert('Error', error.message);
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
@@ -101,6 +128,8 @@ export default function ProfileScreen() {
           onLikePress={handleLike}
           onUsernamePress={handleUsernamePress}
           currentUser={{ id: currentUserId }}
+          onEditPress={handleEdit}
+          onDeletePress={handleDelete}
         />
       )}
       ListHeaderComponent={

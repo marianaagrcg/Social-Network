@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import UserAvatar from './UserAvatar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { formatTimestamp } from '../utils/timeFormatter';
 
-const PostItem = ({ item, onLikePress, onUsernamePress, currentUser }) => {
+const PostItem = ({ item, onLikePress, onUsernamePress, currentUser, onEditPress, onDeletePress }) => {
   const hasLiked = item.likes.includes(currentUser?.id);
+  const isCurrentUserPost = item.user_id === currentUser?.id;
 
   return (
     <View style={styles.postContainer}>
@@ -29,6 +30,17 @@ const PostItem = ({ item, onLikePress, onUsernamePress, currentUser }) => {
         </View>
         <Text style={styles.timestamp}>{formatTimestamp(item.created_at)}</Text>
       </View>
+
+      {isCurrentUserPost && (
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity onPress={() => onEditPress(item)}>
+            <Icon name="edit" size={20} color="#555" style={styles.actionIcon} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => onDeletePress(item.id)}>
+            <Icon name="trash" size={20} color="#e74c3c" style={styles.actionIcon} />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -130,6 +142,15 @@ const styles = StyleSheet.create({
       fontSize: 30,
       fontWeight: 'bold',
     },
+    actionsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      marginTop: 10,
+    },
+    actionIcon: {
+      marginHorizontal: 10,
+    },
+  
   });
 
 export default PostItem;

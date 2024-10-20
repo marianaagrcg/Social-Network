@@ -55,10 +55,21 @@ export default function UserDetailScreen({ route, navigation }) {
     try {
       if (isFollowing) {
         await unfollowUser(userId);
+        setIsFollowing(false);
+        setUserData((prevData) => ({
+          ...prevData,
+          is_following: false,
+          follower_count: prevData.follower_count - 1,
+        }));
       } else {
         await followUser(userId);
+        setIsFollowing(true);
+        setUserData((prevData) => ({
+          ...prevData,
+          is_following: true,
+          follower_count: prevData.follower_count + 1,
+        }));
       }
-      setIsFollowing(!isFollowing);
     } catch (error) {
       console.error(error);
     }

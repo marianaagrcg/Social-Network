@@ -1,4 +1,3 @@
-// src/api/postAPI.js
 import { API_URL } from './config';
 import { getToken } from './authAPI';
 

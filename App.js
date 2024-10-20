@@ -11,6 +11,8 @@ import Following from './Screens/FollowingScreen';
 import Profile from './Screens/ProfileScreen';
 import CreatePost from './Screens/CreatePostScreen';
 import UserDetail from './Screens/UserDetailScreen';
+import EditPostScreen from './Screens/EditPostScreen';
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -52,6 +54,7 @@ export default function App()
         />
         <Stack.Screen name="CreatePost" component={CreatePost} />
         <Stack.Screen name="UserDetail" component={UserDetail} />
+        <Stack.Screen name="EditPost" component={EditPostScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
