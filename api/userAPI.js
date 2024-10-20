@@ -1,26 +1,81 @@
-import * as SecureStore from 'expo-secure-store';
+import { API_URL } from './config';
+import { getToken } from './authAPI';
 
+// Función para obtener la información de un usuario 
 export const getUser = async (userId) => {
-    try{
-        const token = await SecureStore.getItemAsync('token');
-        if (!token) {
-            throw new Error('No token found');
-        }
+  try {
+    const token = await getToken();
+    if (!token) {
+      throw new Error('No token found');
+    }
 
-        const response = await fetch(`https://social-network-v7j7.onrender.com/api/users/${userId}`,{
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-        },
+    const response = await fetch(`${API_URL}/users/${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
     });
 
     const data = await response.json();
     if (!response.ok) {
-        throw new Error(data.message || 'Failed to fetch user profile');
+      throw new Error(data.message || 'Failed to fetch user');
     }
     return data;
-    } catch (error) {
-        throw error;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Funciones para seguir y dejar de seguir a un usuario 
+export const followUser = async (userId) => {
+  try {
+    const token = await getToken();
+    if (!token) {
+      throw new Error('No token found');
     }
+
+    const response = await fetch(`${API_URL}/users/${userId}/follow`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error('Failed to follow user');
+    }
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const unfollowUser = async (userId) => {
+  try {
+    const token = await getToken();
+    if (!token) {
+      throw new Error('No token found');
+    }
+
+    const response = await fetch(`${API_URL}/users/${userId}/follow`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error('Failed to unfollow user');
+    }
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
 };

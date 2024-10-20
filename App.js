@@ -4,13 +4,15 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Login from './Screens/Login';
-import SignUp from './Screens/SignUp';
-import AllPost from './Screens/AllPost';
-import Following from './Screens/Following';
-import Profile from './Screens/Profile';
-import CreatePost from './Screens/CreatePost';
-import UserDetail from './Screens/UserDetail';
+import Login from './Screens/LoginScreen';
+import SignUp from './Screens/SignUpScreen';
+import AllPost from './Screens/AllPostsScreen';
+import Following from './Screens/FollowingScreen';
+import Profile from './Screens/ProfileScreen';
+import CreatePost from './Screens/CreatePostScreen';
+import UserDetail from './Screens/UserDetailScreen';
+import EditPostScreen from './Screens/EditPostScreen';
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -52,6 +54,7 @@ export default function App()
         />
         <Stack.Screen name="CreatePost" component={CreatePost} />
         <Stack.Screen name="UserDetail" component={UserDetail} />
+        <Stack.Screen name="EditPost" component={EditPostScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

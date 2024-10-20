@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { createPost } from '../api/createPost';
+import { createPost } from '../api/postAPI';
 
-export default CreatePost = ({ navigation }) => {
+export default function CreatePostScreen({ navigation }) {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -11,14 +11,13 @@ export default CreatePost = ({ navigation }) => {
       Alert.alert('Error', 'El contenido no puede estar vacío');
       return;
     }
-    
+
     try {
       setLoading(true);
-      const newPost = await createPost(content); 
+      await createPost(content);
       Alert.alert('Éxito', 'El post ha sido creado con éxito.');
-      setContent(''); 
-      // 
-      navigation.navigate('Home', { refresh: true });
+      setContent('');
+      navigation.goBack();
     } catch (error) {
       Alert.alert('Error', 'Hubo un problema al crear el post.');
     } finally {
@@ -36,16 +35,12 @@ export default CreatePost = ({ navigation }) => {
         multiline
         numberOfLines={4}
       />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleCreatePost}
-        disabled={loading}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleCreatePost} disabled={loading}>
         <Text style={styles.buttonText}>{loading ? 'Publicando...' : 'Post'}</Text>
       </TouchableOpacity>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
