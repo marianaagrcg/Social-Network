@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
-import * as SecureStore from 'expo-secure-store'; // Importa SecureStore
+import * as SecureStore from 'expo-secure-store'; 
 
 export default Users = ({ navigation }) => {
   const [post, setPost] = useState([]);  
@@ -8,7 +8,7 @@ export default Users = ({ navigation }) => {
 
   const handleAllPost = async () => {
     try {
-      const token = await SecureStore.getItemAsync('token');  // Recuperar el token desde SecureStore
+      const token = await SecureStore.getItemAsync('token');
       console.log('Token:', token);
       if (!token) {
         Alert.alert('Error', 'No token found');

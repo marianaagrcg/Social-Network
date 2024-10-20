@@ -5,13 +5,7 @@ import { getUser } from '../api/userAPI';
 import { getUserPosts } from '../api/userPostsAPI';
 import { follow, unfollow } from '../api/followAPI';
 import { userProfile } from '../api/userProfileAPI';
-
-const getRandomColor = (username) =>
-{
-    const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#8e44ad', '#e67e22'];
-    const charCodeSum = username.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
-    return colors[charCodeSum % colors.length];
-}
+import { getRandomColor } from '../utils/colorUtils';
 
 export default function UserDetail({ route })
 {
@@ -123,8 +117,9 @@ export default function UserDetail({ route })
                     <Text style={styles.usernameLarge}>{userData.username}</Text>
                     <View style={styles.followInfo}>
                         <Text style={styles.followText}>Followers: {userData.follower_count}</Text>
-                        <Text style={styles.followText}>Following: {userData.following_count}</Text>
+                        <Text style={styles.followText}> Following: {userData.following_count}</Text>
                     </View>
+
                     {currentUserId !== userId && (
                         <TouchableOpacity
                             style={[
