@@ -59,7 +59,7 @@ export default function UserDetailScreen({ route, navigation }) {
         setUserData((prevData) => ({
           ...prevData,
           is_following: false,
-          follower_count: prevData.follower_count - 1,
+          follower_count: +prevData.follower_count - 1, // Asegura que sea número
         }));
       } else {
         await followUser(userId);
@@ -67,7 +67,7 @@ export default function UserDetailScreen({ route, navigation }) {
         setUserData((prevData) => ({
           ...prevData,
           is_following: true,
-          follower_count: prevData.follower_count + 1,
+          follower_count: +prevData.follower_count + 1, // Asegura que sea número
         }));
       }
     } catch (error) {
