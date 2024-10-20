@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, Alert, Text } from 'react-native';
 import { editPost } from '../api/postAPI';
 
 export default function EditPostScreen({ route, navigation }) {
@@ -34,13 +34,15 @@ export default function EditPostScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.textInput}
+        style={styles.input}
         multiline
         value={content}
         onChangeText={setContent}
         placeholder="Edit your post..."
       />
-      <Button title={loading ? 'Saving...' : 'Save'} onPress={handleSave} disabled={loading} />
+      <TouchableOpacity style={styles.button} onPress={handleSave} disabled={loading}>
+        <Text style={styles.buttonText}>{loading ? 'Saving...' : 'Save'}</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -48,16 +50,33 @@ export default function EditPostScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 20,
+    backgroundColor: '#fff',
+    alignItems: 'center',
   },
-  textInput: {
-    flex: 1,
-    textAlignVertical: 'top',
-    fontSize: 16,
-    padding: 8,
+  input: {
+    height: '40%',
+    width: '100%',
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 16,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    marginBottom: 20,
+    textAlignVertical: 'top',  
+    alignContent: 'center'
+  },
+  button: {
+    backgroundColor: '#1E90FF', 
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    width: '100%',
+    margin: 12,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });

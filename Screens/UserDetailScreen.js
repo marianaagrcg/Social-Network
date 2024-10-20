@@ -137,7 +137,7 @@ export default function UserDetailScreen({ route, navigation }) {
           <Text style={styles.usernameLarge}>{userData.username}</Text>
           <View style={styles.followInfo}>
             <Text style={styles.followText}>Followers: {userData.follower_count}</Text>
-            <Text style={styles.followText}>Following: {userData.following_count}</Text>
+            <Text style={styles.followText}> Following: {userData.following_count}</Text>
           </View>
           {currentUserId !== userId && (
             <TouchableOpacity
