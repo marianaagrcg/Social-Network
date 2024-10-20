@@ -2,35 +2,76 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getAllPosts } from '../api/allPostsAPI';
+import { userProfile } from '../api/userProfileAPI';
+import { likePost, unlikePost } from '../api/likeAPI';
 
-const getRandomColor = (username) =>
-{
+const getRandomColor = (username) => {
   const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#8e44ad', '#e67e22'];
   const charCodeSum = username.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
   return colors[charCodeSum % colors.length];
 };
 
-export default AllPost = ({ navigation }) =>
-{
+export default AllPost = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null); 
 
-  useEffect(() =>
-  {
-    const fetchPosts = async () =>
-    {
-      try
-      {
-        const data = await getAllPosts();
-        setPosts(data);
-      } catch (error)
-      {
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const profile = await userProfile();
+        setUser(profile); 
+      } catch (error) {
         setError(error.message);
       }
     };
 
-    fetchPosts();
+    const fetchPosts = async () => {
+      try {
+        const data = await getAllPosts();
+        setPosts(data);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    fetchUserProfile(); 
+    fetchPosts(); 
   }, []);
+
+  const handleLike = async (postId, likes) => {
+    if (!user) return; 
+
+    if (likes.includes(user.id)) {
+      
+      try {
+        const data = await unlikePost(postId);
+        const updatedPosts = posts.map((post) => {
+          if (post.id === postId) {
+            return { ...post, likes: post.likes.filter((id) => id !== user.id) }; 
+          }
+          return post;
+        });
+        setPosts(updatedPosts);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      
+      try {
+        const data = await likePost(postId);
+        const updatedPosts = posts.map((post) => {
+          if (post.id === postId) {
+            return { ...post, likes: [...post.likes, user.id] }; 
+          }
+          return post;
+        });
+        setPosts(updatedPosts);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   const renderAllPost = ({ item }) => (
     <View style={styles.postContainer}>
@@ -47,9 +88,11 @@ export default AllPost = ({ navigation }) =>
 
       <View style={styles.footer}>
         <View style={styles.likesContainer}>
-          <Icon name="heart-o" size={20} color="#555" />
+          <TouchableOpacity onPress={() => handleLike(item.id, item.likes)}>
+            <Icon name={item.likes.includes(user?.id) ? 'heart' : 'heart-o'} size={20} color={item.likes.includes(user?.id) ? '#e74c3c' : '#555'} />
+          </TouchableOpacity>
           <Text style={styles.likeText}>
-            {Array.isArray(item.likes) ? item.likes.length : 0} {item.likes?.length === 1 ? 'like' : 'likes'}
+            {item.likes.length} {item.likes.length === 1 ? 'like' : 'likes'}
           </Text>
         </View>
         <Text style={styles.timestamp}>
@@ -59,7 +102,7 @@ export default AllPost = ({ navigation }) =>
             day: 'numeric',
             hour: 'numeric',
             minute: 'numeric',
-            hour12: true, // Para formato de 12 horas (AM/PM)
+            hour12: true,
           })}
         </Text>
       </View>
@@ -82,7 +125,7 @@ export default AllPost = ({ navigation }) =>
 
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => navigation.navigate('CreatePost')}  // Usa navigation prop
+        onPress={() => navigation.navigate('CreatePost')}
       >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>

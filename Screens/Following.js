@@ -1,38 +1,76 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Alert } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getAllFollowingPosts } from '../api/followingAPI';
+import { userProfile } from '../api/userProfileAPI'; 
+import { likePost, unlikePost } from '../api/likeAPI'; 
 
-const getRandomColor = (username) =>
-{
+const getRandomColor = (username) => {
   const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#8e44ad', '#e67e22'];
   const charCodeSum = username.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
   return colors[charCodeSum % colors.length];
 };
 
-export default Following = ({ navigation }) =>
-{
+export default Following = ({ navigation }) => {
   const [followingPosts, setFollowingPosts] = useState([]);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null); 
 
-
-  useEffect(() =>
-  {
-    const fetchFollowingPosts = async () =>
-    {
-      try
-      {
-        const data = await getAllFollowingPosts();
-        setFollowingPosts(data);
-      } catch
-      {
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const profile = await userProfile();
+        setUser(profile); 
+      } catch (error) {
         setError(error.message);
       }
     };
 
-    fetchFollowingPosts();
+    const fetchFollowingPosts = async () => {
+      try {
+        const data = await getAllFollowingPosts();
+        setFollowingPosts(data);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    fetchUserProfile(); 
+    fetchFollowingPosts(); 
   }, []);
+
+  const handleLike = async (postId, likes) => {
+    if (!user) return; 
+
+    if (likes.includes(user.id)) {
+     
+      try {
+        await unlikePost(postId);
+        const updatedPosts = followingPosts.map((post) => {
+          if (post.id === postId) {
+            return { ...post, likes: post.likes.filter((id) => id !== user.id) }; 
+          }
+          return post;
+        });
+        setFollowingPosts(updatedPosts);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        await likePost(postId);
+        const updatedPosts = followingPosts.map((post) => {
+          if (post.id === postId) {
+            return { ...post, likes: [...post.likes, user.id] }; 
+          }
+          return post;
+        });
+        setFollowingPosts(updatedPosts);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   const renderAllFollowingPost = ({ item }) => (
     <View style={styles.postContainer}>
@@ -47,7 +85,9 @@ export default Following = ({ navigation }) =>
 
       <View style={styles.footer}>
         <View style={styles.likesContainer}>
-          <Icon name="heart-o" size={20} color="#555" />
+          <TouchableOpacity onPress={() => handleLike(item.id, item.likes)}>
+            <Icon name={item.likes.includes(user?.id) ? 'heart' : 'heart-o'} size={20} color={item.likes.includes(user?.id) ? '#e74c3c' : '#555'} />
+          </TouchableOpacity>
           <Text style={styles.likeText}>
             {Array.isArray(item.likes) ? item.likes.length : 0} {item.likes?.length === 1 ? 'like' : 'likes'}
           </Text>
@@ -72,11 +112,10 @@ export default Following = ({ navigation }) =>
       keyExtractor={(item) => item.id.toString()}
       renderItem={renderAllFollowingPost}
       ListHeaderComponent={(
-        <Text style={styles.title}>Recent Posts</Text>
+        <Text style={styles.title}>Posts from Users You're Following</Text>
       )}
-
       ListEmptyComponent={() => (
-        <Text style={styles.noPostsText}>No more posts</Text>
+        <Text style={styles.noPostsText}>No posts to display</Text>
       )}
       contentContainerStyle={styles.flatListContent}
     />
@@ -88,55 +127,6 @@ const styles = StyleSheet.create({
   flatListContent: {
     paddingHorizontal: 20,
     paddingTop: 20,
-  },
-  profileSection: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 30,
-    marginTop: 30,
-  },
-  avatarLarge: {
-    width: 70,
-    height: 70,
-    borderRadius: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  avatarTextLarge: {
-    color: '#fff',
-    fontSize: 36,
-    fontWeight: 'bold',
-  },
-  usernameLarge: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  followInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '50%',
-    marginVertical: 10,
-  },
-  followText: {
-    fontSize: 16,
-    color: '#555',
-  },
-  postsTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginLeft: 5,
-    alignSelf: 'flex-start',
-    marginBottom: -10,
-    marginTop: 30,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginLeft: 5,
-    alignSelf: 'center',
-    marginTop: 10,
-    marginBottom: 20,
   },
   postContainer: {
     marginBottom: 10,
@@ -205,5 +195,13 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     textAlign: 'center',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: 5,
+    alignSelf: 'center',
+    marginTop: 10,
+    marginBottom: 20,
   },
 });

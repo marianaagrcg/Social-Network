@@ -16,6 +16,7 @@ export const getAllPosts = async (page = 1, limit = 15) => {
     });
 
     const data = await response.json();
+    console.log(data);
     if (!response.ok) {
       throw new Error('Failed to fetch posts');
     }
