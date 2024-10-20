@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { getAllPosts, likePost, unlikePost, deletePost } from '../api/postAPI';
 import { getUserProfile } from '../api/authAPI';
@@ -8,11 +8,14 @@ import PostItem from '../components/PostItem';
 export default function AllPostsScreen({ navigation }) {
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
+      setLoading(true);
+
       const fetchData = async () => {
         try {
           const userProfile = await getUserProfile();
@@ -27,6 +30,10 @@ export default function AllPostsScreen({ navigation }) {
         } catch (error) {
           if (isActive) {
             setError(error.message);
+          }
+        }finally{
+          if(isActive){
+            setLoading(false);
           }
         }
       };
@@ -95,6 +102,14 @@ export default function AllPostsScreen({ navigation }) {
       { cancelable: true }
     );
   };
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  if (error) {
+    return <Text style={styles.errorText}>{error}</Text>;
+  }
 
   return (
     <View style={styles.container}>

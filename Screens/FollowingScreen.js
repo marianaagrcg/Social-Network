@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { getFollowingPosts, likePost, unlikePost } from '../api/postAPI';
 import { getUserProfile } from '../api/authAPI';
@@ -9,10 +9,12 @@ export default function FollowingScreen({ navigation }) {
   const [followingPosts, setFollowingPosts] = useState([]);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
+      setLoading(true);
 
       const fetchData = async () => {
         try {
@@ -28,6 +30,10 @@ export default function FollowingScreen({ navigation }) {
         } catch (error) {
           if (isActive) {
             setError(error.message);
+          }
+        } finally{
+          if(isActive){
+            setLoading(false);
           }
         }
       };
@@ -69,6 +75,14 @@ export default function FollowingScreen({ navigation }) {
   const handleUsernamePress = (userId) => {
     navigation.navigate('UserDetail', { userId });
   };
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  if (error) {
+    return <Text style={styles.errorText}>{error}</Text>;
+  }
 
   return (
     <FlatList
