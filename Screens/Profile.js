@@ -14,7 +14,7 @@ const getRandomColor = (username) =>
 export default function Profile()
 {
     const [userData, setUserData] = useState(null);
-    const [userPosts, setUserPosts] = useState([]); 
+    const [userPosts, setUserPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -24,10 +24,10 @@ export default function Profile()
         {
             try
             {
-                const data = await userProfile(); 
-                const posts = await getUserPosts(data.id);  
+                const data = await userProfile();
+                const posts = await getUserPosts(data.id);
                 setUserData(data);
-                setUserPosts(posts);  
+                setUserPosts(posts);
                 setLoading(false);
             } catch (error)
             {
