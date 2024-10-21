@@ -34,9 +34,9 @@ npx expo start
 # Social Network App View
  ## Sign Up
  <p align="center">
-  <img src="./assets/signupImage.jpeg" alt="Sign Up" width="800">
+  <img src="./assets/signupImage.jpeg" alt="Sign Up" width="200">
 </p>
  ## Log In
   <p align="center">
-  <img src="./assets/loginImage.jpeg" alt="Sign Up" width="800">
+  <img src="./assets/loginImage.jpeg" alt="Sign Up" width="200">
 </p>
