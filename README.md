@@ -29,6 +29,7 @@ npm install
 npm install -g expo-cli
 
 npx expo start
+```
 
 # Social Network App View
  ## Sign Up
