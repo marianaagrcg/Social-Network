@@ -47,6 +47,11 @@ npx expo start
       <img src="./assets/allpostImage.jpeg" alt="All post" width="200">
    </p>
 
+   ### Profile
+   <p align="center">
+      <img src="./assets/profileImage.jpeg" alt="Profile" width="200">
+   </p>
+
    ### Following post view
    <p align="center">
       <img src="./assets/followingpostImage.jpeg" alt="Following" width="200">
@@ -71,5 +76,5 @@ npx expo start
 
    ### Like
    <p align="center">
-      <img src="./assets/likeImage.jpeg" alt="Delete" width="200">
+      <img src="./assets/likeImage.jpeg" alt="Like" width="200">
    </p>
