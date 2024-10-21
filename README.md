@@ -44,11 +44,22 @@ npx expo start
 
    ### All post view
    <p align="center">
-      <img src="./assets/createpostImage.jpeg" alt="Sign Up" width="200">
-      <img src="./assets/createpost2Image.jpeg" alt="Sign Up" width="200">
+      <img src="./assets/allpostImage.jpeg" alt="Sign Up" width="200">
    </p>
 
    ### Following post view
    <p align="center">
       <img src="./assets/followingpostImage.jpeg" alt="Sign Up" width="200">
+   </p>
+
+   ### Create post view
+   <p align="center">
+      <img src="./assets/createpostImage.jpeg" alt="Sign Up" width="200">
+      <img src="./assets/createpost2Image.jpeg" alt="Sign Up" width="200">
+   </p>
+
+   ### Edit post view
+   <p align="center">
+      <img src="./assets/editpostImag.jpeg" alt="Sign Up" width="200">
+      <img src="./assets/editpostImage2.jpeg" alt="Sign Up" width="200">
    </p>
