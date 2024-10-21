@@ -39,27 +39,37 @@ npx expo start
 
    ### Log In
    <p align="center">
-      <img src="./assets/loginImage.jpeg" alt="Sign Up" width="200">
+      <img src="./assets/loginImage.jpeg" alt="Log In" width="200">
    </p>
 
    ### All post view
    <p align="center">
-      <img src="./assets/allpostImage.jpeg" alt="Sign Up" width="200">
+      <img src="./assets/allpostImage.jpeg" alt="All post" width="200">
    </p>
 
    ### Following post view
    <p align="center">
-      <img src="./assets/followingpostImage.jpeg" alt="Sign Up" width="200">
+      <img src="./assets/followingpostImage.jpeg" alt="Following" width="200">
    </p>
 
    ### Create post view
    <p align="center">
-      <img src="./assets/createpostImage.jpeg" alt="Sign Up" width="200">
-      <img src="./assets/createpost2Image.jpeg" alt="Sign Up" width="200">
+      <img src="./assets/createpostImage.jpeg" alt="Create post" width="200">
+      <img src="./assets/createpost2Image.jpeg" alt="Create post 2" width="200">
    </p>
 
    ### Edit post view
    <p align="center">
-      <img src="./assets/editpostImag.jpeg" alt="Sign Up" width="200">
-      <img src="./assets/editpostImage2.jpeg" alt="Sign Up" width="200">
+      <img src="./assets/editpostImag.jpeg" alt="Edit post" width="200">
+      <img src="./assets/editpostImage2.jpeg" alt="Edit post 2" width="200">
+   </p>
+
+   ### Delete post view
+   <p align="center">
+      <img src="./assets/deletepostImage.jpeg" alt="Delete" width="200">
+   </p>
+
+   ### Like
+   <p align="center">
+      <img src="./assets/likeImage.jpeg" alt="Delete" width="200">
    </p>
